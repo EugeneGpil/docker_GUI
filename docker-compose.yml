@@ -1,0 +1,26 @@
+version: '3.8'
+
+services:
+
+  ubuntu:
+    build:
+      context: ubuntu
+    volumes:
+      #Forwarding an X Socket
+      - /tmp/.X11-unix:/tmp/.X11-unix
+
+    environment:
+      DISPLAY: $DISPLAY
+
+    #Need host network mode
+    network_mode: host
+
+    command: bash -c "\
+        \
+        echo \"Adding token to access host's X Server from inside the container\" &&\
+        echo ${DISPLAY_ACCESS} &&\
+        xauth add ${DISPLAY_ACCESS} &&\
+        \
+        echo \"Running an app with graphic interface\" &&\
+        gedit\
+      "
